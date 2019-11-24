@@ -16,7 +16,7 @@
         this.value_lavel = '';
         this.title = ''; //見出し文字列
         this.form_type = ''; // text|number|datetime|date|time|checkbox|radio|select|textarea|hidden
-        this.view_type = '';// edit|view|enable
+        this.disp_type = '';// edit|view|enable
         this.err_msg = '';
         this.is_modified = false;
         this.disabled = false;
@@ -39,7 +39,7 @@
         this.list = [];
 
         Object.keys(params).forEach(function(key) {
-            if(this[key] !== void 0){
+            if(this[key] !== void 0 || typeof params[key] == "function"){
                 this[key] = params[key];
             }
         }, this);
@@ -59,10 +59,14 @@
             textarea:'form-textarea',
             hidden: 'form-input'
         };
-        this.component_name = component_name_map[this.form_type];
+        this.component_name = this.disp_type === 'view' ? 'form-display_only' : component_name_map[this.form_type];
     };
     Item.prototype.updateProperty = function(key, value){
         this[key] = value;
+    };
+    Item.prototype.setValueLabel = function(){
+        // 特に指定がなければ value をそのまま表示
+        this.value_label = this.value;
     };
     window.Item = Item;
 
@@ -95,12 +99,18 @@
         },this);
         this.updateItemsByUpdateValue();
     };
+    ItemUnit.prototype.getDispType = function(){
+        let exists_edit_item = this.items.some(function(item){
+            return item.disp_type === 'edit';
+        });
+        return exists_edit_item ? 'edit' : 'view'
+    };
     ItemUnit.prototype.updateItemsByUpdateValue = function(){};
     ItemUnit.prototype.isValid = function(){
         // チェック内容がなければ常にtrue
         return true;
     };
-    // 未入力エラーがないか汎用チェック
+    // 未入力エラーがないか汎用
     ItemUnit.prototype.hasEmptyError = function(){
         return this.items.reduce(function(flg,item){
             item.err_msg = item.value ? '' : '入力してください';

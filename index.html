@@ -7,7 +7,6 @@
 </head>
 <body>
 <div id="tgt"></div>
-<!-- global compolents -->
 
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <!-- https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.4.0/dist/vue-ctk-date-time-picker.common.min.js -->
@@ -24,6 +23,8 @@
         </form>
     </div>
 </script>
+
+<!-- global compolents -->
 
 <script>
     Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
@@ -149,11 +150,38 @@
     });
 </script>
 
+<script type="text/x-template" id="tmpl-form-display_only">
+    <dl>
+        <dt>{{form_data.title}}</dt>
+        <dd>
+            {{form_data.value_label}}
+        </dd>
+    </dl>
+</script>
+<script>
+    Vue.component('form-display_only',{
+        props:{
+            form_data:{
+                type:Item,
+                requird:true
+            }
+        },
+        created:function(){
+            this.form_data.setValueLabel();
+        },
+        template:'#tmpl-form-display_only'
+    });
+</script>
+
+
 <!-- form-unit -->
 <script type="text/x-template" id="tmpl-form-unit">
     <dl>
         <dt>{{unit_data.title}}</dt>
-        <dd>
+        <dd v-if="disp_type === 'edit'" class="edit">
+            <component v-for="form_data in unit_data.items" :key="form_data.id" :form_data="form_data" :is="form_data.component_name" @updateValues="updateValues"></component>
+        </dd>
+        <dd v-else class="view">
             <component v-for="form_data in unit_data.items" :key="form_data.id" :form_data="form_data" :is="form_data.component_name" @updateValues="updateValues"></component>
         </dd>
     </dl>
@@ -167,6 +195,11 @@
             }
         },
         template:'#tmpl-form-unit',
+        computed:{
+            disp_type:function(){
+                return this.unit_data.getDispType();
+            }
+        },
         methods:{
             updateValues:function(){
                 console.log('unitに更新通知');
@@ -190,6 +223,7 @@
                         name: 'fuga',
                         title: '個別のタイトル',
                         form_type:'text',
+                        disp_type:'edit',
                         value: '',
                         placeholder:'個別のタイトルを入力'
                     }
@@ -204,6 +238,7 @@
                         name: 'fuga',
                         title: '個別のタイトル',
                         form_type:'radio',
+                        disp_type:'edit',
                         value: '',
                         list:[
                             {
@@ -227,6 +262,7 @@
                         name: 'fuga_check',
                         title: 'チェックボックス複数',
                         form_type:'checkbox',
+                        disp_type:'edit',
                         value: [],
                         list:[
                             {
@@ -250,6 +286,7 @@
                         name: 'fuga_flg',
                         title: '',
                         form_type:'checkbox',
+                        disp_type:'edit',
                         value: false, // 1つのときは Boolean
                         list:[
                             {
@@ -263,6 +300,7 @@
                         name: 'fuga_text',
                         title: '補足',
                         form_type:'text',
+                        disp_type:'edit',
                         value: '',
                         placeholder:'チェックしたときだけ入力'
                     }
@@ -280,6 +318,7 @@
                         name: 'unit5_start',
                         title: '開始',
                         form_type:'datetime',
+                        disp_type:'edit',
                         value: ''
                     },
                     {
@@ -287,6 +326,7 @@
                         name: 'unit5_end',
                         title: '終了',
                         form_type:'datetime',
+                        disp_type:'edit',
                         value: '',
                     }
                 ],
@@ -298,6 +338,24 @@
                     }*/
                     return !err_flg;
                 }
+            },
+            {
+                id: 'unit6',
+                title: 'viewタイプテスト',
+                items:[
+                    {
+                        id: 'unit6_text',
+                        name: 'unit6_text',
+                        title: 'viewタイプテスト',
+                        form_type:'text',
+                        disp_type:'view',
+                        value: '',
+                        placeholder:'個別のタイトルを入力',
+                        setValueLabel:function(){
+                            this.value_label = this.value || '(未設定)';
+                        }
+                    }
+                ]
             },
         ];
 
