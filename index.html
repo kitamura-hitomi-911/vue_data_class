@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Data に class を使うテスト</title>
+    <link href="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.4.0/dist/vue-ctk-date-time-picker.css" rel="stylesheet">
+</head>
+<body>
+<div id="tgt"></div>
+<!-- global compolents -->
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.4.0/dist/vue-ctk-date-time-picker.common.min.js -->
+<script src="vue-ctk-date-time-picker.common.min.js"></script>
+<script src="class.js"></script>
+
+<script type="text/x-template" id="tmpl-form">
+    <div class="form">
+        <form action="" name="frm">
+            <form-unit v-for="unit_data in unit_list" :unit_data="unit_data" :key="unit_data.id"></form-unit>
+            <div class="form-submit_area">
+                <p v-for="btn in btn_list" :key="btn.form_name" :class="btn.type"><a href="#" @click.prevent="onClickBtn(btn)">確認画面へ</a></p>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script>
+    Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
+</script>
+<!-- form-datetime -->
+<script type="text/x-template" id="tmpl-form-datetime">
+    <dl>
+        <dt>{{form_data.title}}</dt>
+        <dd>
+            <VueCtkDateTimePicker v-model="form_data.value" />
+            <input type="datetime-local" v-model="form_data.value" :name="form_data.name" :placeholder="form_data.placeholder" :disabled="form_data.disabled" @input="onInput"/>
+        </dd>
+        <dd class="err_msg" v-if="form_data.err_msg">{{form_data.err_msg}}</dd>
+    </dl>
+</script>
+<script>
+    Vue.component('form-datetime',{
+        props:{
+            form_data:{
+                type:Item,
+                requird:true
+            }
+        },
+        template:'#tmpl-form-datetime',
+        methods:{
+            onInput:function(){
+                this.$emit('updateValues');
+            }
+        }
+    });
+</script>
+
+<!-- form-checkbox -->
+<script type="text/x-template" id="tmpl-form-checkbox">
+    <dl>
+        <dt>{{form_data.title}}</dt>
+        <dd>
+            <p v-for="checkbox in form_data.list" :key="checkbox.value">
+                <label :for="form_data.name +'_'+checkbox.value">
+                    <input :type="form_data.form_type" v-model="form_data.value" :name="form_data.name" :id="form_data.name +'_'+checkbox.value" :value="checkbox.value" @change="onChange"/>
+                    {{checkbox.label}}
+                </label>
+            </p>
+
+        </dd>
+        <dd class="err_msg" v-if="form_data.err_msg">{{form_data.err_msg}}</dd>
+    </dl>
+</script>
+<script>
+    Vue.component('form-checkbox',{
+        props:{
+            form_data:{
+                type:Item,
+                requird:true
+            }
+        },
+        template:'#tmpl-form-checkbox',
+        methods:{
+            onChange:function(){
+                this.$emit('updateValues');
+            }
+        }
+    });
+</script>
+
+<!-- form-radio -->
+<script type="text/x-template" id="tmpl-form-radio">
+    <dl>
+        <dt>{{form_data.title}}</dt>
+        <dd>
+            <p v-for="radio in form_data.list" :key="radio.value">
+                <label :for="form_data.name +'_'+radio.value">
+                    <input :type="form_data.form_type" v-model="form_data.value" :name="form_data.name" :id="form_data.name +'_'+radio.value" :value="radio.value" @change="onChange"/>
+                    {{radio.label}}
+                </label>
+
+            </p>
+        </dd>
+        <dd class="err_msg" v-if="form_data.err_msg">{{form_data.err_msg}}</dd>
+    </dl>
+</script>
+<script>
+    Vue.component('form-radio',{
+        props:{
+            form_data:{
+                type:Item,
+                requird:true
+            }
+        },
+        template:'#tmpl-form-radio',
+        methods:{
+            onChange:function(){
+                this.$emit('updateValues');
+            }
+        }
+    });
+</script>
+
+<!-- form-input -->
+<script type="text/x-template" id="tmpl-form-input">
+    <dl>
+        <dt>{{form_data.title}}</dt>
+        <dd>
+            <input :type="form_data.form_type" v-model="form_data.value" :name="form_data.name" :placeholder="form_data.placeholder" :disabled="form_data.disabled" @input="onInput"/>
+        </dd>
+        <dd class="err_msg" v-if="form_data.err_msg">{{form_data.err_msg}}</dd>
+    </dl>
+</script>
+<script>
+    Vue.component('form-input',{
+        props:{
+            form_data:{
+                type:Item,
+                requird:true
+            }
+        },
+        template:'#tmpl-form-input',
+        methods:{
+            onInput:function(){
+                this.$emit('updateValues');
+            }
+        }
+    });
+</script>
+
+<!-- form-unit -->
+<script type="text/x-template" id="tmpl-form-unit">
+    <dl>
+        <dt>{{unit_data.title}}</dt>
+        <dd>
+            <component v-for="form_data in unit_data.items" :key="form_data.id" :form_data="form_data" :is="form_data.component_name" @updateValues="updateValues"></component>
+        </dd>
+    </dl>
+</script>
+<script>
+    Vue.component('form-unit',{
+        props:{
+            unit_data:{
+                type:ItemUnit,
+                requird:true
+            }
+        },
+        template:'#tmpl-form-unit',
+        methods:{
+            updateValues:function(){
+                console.log('unitに更新通知');
+                this.unit_data.updateItemsByUpdateValue();
+            }
+        }
+    });
+</script>
+
+<script>
+    (function(){
+        'use strict';
+
+        let item_unit_list = [
+            {
+                id: 'unit1',
+                title: 'input-type テキスト1つ',
+                items:[
+                    {
+                        id: 'unit1_text',
+                        name: 'fuga',
+                        title: '個別のタイトル',
+                        form_type:'text',
+                        value: '',
+                        placeholder:'個別のタイトルを入力'
+                    }
+                ]
+            },
+            {
+                id: 'unit2',
+                title: 'input-type radio',
+                items:[
+                    {
+                        id: 'unit2_radio',
+                        name: 'fuga',
+                        title: '個別のタイトル',
+                        form_type:'radio',
+                        value: '',
+                        list:[
+                            {
+                                value:1,
+                                label:'表示用ラベル1'
+                            },
+                            {
+                                value:2,
+                                label:'表示用ラベル2'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'unit3',
+                title: 'input-type checkbox',
+                items:[
+                    {
+                        id: 'unit3_check',
+                        name: 'fuga_check',
+                        title: 'チェックボックス複数',
+                        form_type:'checkbox',
+                        value: [],
+                        list:[
+                            {
+                                value:1,
+                                label:'表示用ラベル1'
+                            },
+                            {
+                                value:2,
+                                label:'表示用ラベル2'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'unit4',
+                title: 'input-type checkbox & input',
+                items:[
+                    {
+                        id: 'unit4_check',
+                        name: 'fuga_flg',
+                        title: '',
+                        form_type:'checkbox',
+                        value: false, // 1つのときは Boolean
+                        list:[
+                            {
+                                value:1,
+                                label:'チェック？'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'unit4_text',
+                        name: 'fuga_text',
+                        title: '補足',
+                        form_type:'text',
+                        value: '',
+                        placeholder:'チェックしたときだけ入力'
+                    }
+                ],
+                updateItemsByUpdateValue:function(){
+                    this.items_obj.unit4_text.updateProperty('disabled', !this.items_obj.unit4_check.value)
+                }
+            },
+            {
+                id: 'unit5',
+                title: 'input-type datetime',
+                items:[
+                    {
+                        id: 'unit5_start',
+                        name: 'unit5_start',
+                        title: '開始',
+                        form_type:'datetime',
+                        value: ''
+                    },
+                    {
+                        id: 'unit5_end',
+                        name: 'unit5_end',
+                        title: '終了',
+                        form_type:'datetime',
+                        value: '',
+                    }
+                ],
+                isValid:function(){
+                    let err_flg = false;
+                    err_flg = this.hasEmptyError() || err_flg;
+                    /* if(!this.items_obj.unit5_start.value || !this.items_obj.unit5_end.value){
+                        err_flg = true;
+                    }*/
+                    return !err_flg;
+                }
+            },
+        ];
+
+        new Vue({
+            el:'#tgt',
+            template:'#tmpl-form',
+            data:{
+                current_step:'input',
+                unit_list:[],
+                btn_list:[
+                    {
+                        type:'submit',
+                        form_name:'frm',
+                        label:'確認'
+                    }
+                ]
+            },
+            created:function(){
+                item_unit_list.forEach(function(item_unit){
+                    this.unit_list.push(new ItemUnit(item_unit));
+                },this);
+            },
+            methods:{
+                onClickBtn:function(btn){
+                    let err_flg = false;
+                    if(this.current_step === 'input' && btn.type === 'submit'){
+                        // 確認画面へ遷移するときだけ入力チェック
+                        err_flg = this.unit_list.reduce(function(flg, unit){
+                            console.log(unit.id, unit.isValid());
+                            return !unit.isValid() || flg;
+                        }, err_flg);
+                        console.log('err_flg:' + err_flg);
+                    }
+                    if(!err_flg){
+                        // document[btn.form_name].submit();
+                    }
+                }
+
+            }
+        });
+    })();
+</script>
+</body>
+</html>
