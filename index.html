@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Vue Data に class を使うテスト</title>
-    <link href="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.4.0/dist/vue-ctk-date-time-picker.css" rel="stylesheet">
 </head>
 <body>
 <div id="tgt"></div>
 
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
-<!-- https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.4.0/dist/vue-ctk-date-time-picker.common.min.js -->
-<script src="vue-ctk-date-time-picker.common.min.js"></script>
 <script src="class.js"></script>
 
 <script type="text/x-template" id="tmpl-form">
@@ -25,16 +22,11 @@
 </script>
 
 <!-- global compolents -->
-
-<script>
-    Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
-</script>
 <!-- form-datetime -->
 <script type="text/x-template" id="tmpl-form-datetime">
     <dl>
         <dt>{{form_data.title}}</dt>
         <dd>
-            <VueCtkDateTimePicker v-model="form_data.value" />
             <input type="datetime-local" v-model="form_data.value" :name="form_data.name" :placeholder="form_data.placeholder" :disabled="form_data.disabled" @input="onInput"/>
         </dd>
         <dd class="err_msg" v-if="form_data.err_msg">{{form_data.err_msg}}</dd>
