@@ -7,17 +7,16 @@
      * @constructor
      */
     let Item = function(params){
-        if(!params || !params.id || !params.name){
+        if(!params || !params.name){
             return;
         }
-        this.id = '';
         this.name = '';
         this.value = '';
         this.value_lavel = '';
         this.title = ''; //見出し文字列
-        this.form_type = ''; // text|number|datetime|date|time|checkbox|radio|select|textarea|hidden
+        this.form_type = ''; // text|number|date|time|checkbox|radio|select|textarea|hidden
         this.disp_type = '';// edit|view|enable
-        this.err_msg = '';
+        this.err_msgs = [];
         this.is_modified = false;
         this.disabled = false;
 
@@ -50,7 +49,6 @@
         let component_name_map = {
             text : 'form-input',
             number: 'form-input',
-            datetime: 'form-datetime',
             date: 'form-input',
             time: 'form-input',
             checkbox: 'form-checkbox',
@@ -83,6 +81,7 @@
         this.title = ''; // 見出し文字列
         this.design_type = 'single';// single | multiple
         this.items = []; // 各フォームパーツがぶら下がる
+        this.err_msgs = [];
         Object.keys(params).forEach(function(key) {
             if(this[key] !== void 0 || typeof params[key] == "function"){
                 this[key] = key === 'items' ? params[key].map(function(item_params){
@@ -95,7 +94,7 @@
     ItemUnit.prototype.init = function(){
         this.items_obj = {};
         this.items.forEach(function(item){
-            this.items_obj[item.id] = item;
+            this.items_obj[item.name] = item;
         },this);
         this.updateItemsByUpdateValue();
     };
@@ -113,9 +112,20 @@
     // 未入力エラーがないか汎用
     ItemUnit.prototype.hasEmptyError = function(){
         return this.items.reduce(function(flg,item){
-            item.err_msg = item.value ? '' : '入力してください';
             return !item.value || flg;
         },false);
+    };
+    // エラーメッセージをリセット
+    ItemUnit.prototype.resetErrMsg = function(){
+        this.err_msgs.splice(0);
+    };
+    // エラーメッセージをセット
+    ItemUnit.prototype.setErrMsg = function(msg){
+        this.err_msgs.push(msg);
+    };
+    // エラーメッセージがあるかどうか
+    ItemUnit.prototype.hasErrMsg = function(){
+        return !!this.err_msgs.length;
     };
 
     window.ItemUnit = ItemUnit;
