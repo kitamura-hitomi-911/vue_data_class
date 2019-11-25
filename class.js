@@ -59,12 +59,12 @@
         };
         this.component_name = this.disp_type === 'view' ? 'form-display_only' : component_name_map[this.form_type];
     };
-    Item.prototype.updateProperty = function(key, value){
-        this[key] = value;
+    Item.prototype.updateProperty = function(name, value){
+        this[name] = value;
     };
     Item.prototype.setValueLabel = function(){
         // 特に指定がなければ value をそのまま表示
-        this.value_label = this.value;
+        this.value_label = this.value || '(未設定)';
     };
     window.Item = Item;
 
@@ -96,7 +96,7 @@
         this.items.forEach(function(item){
             this.items_obj[item.name] = item;
         },this);
-        this.updateItemsByUpdateValue();
+        this.updateItemsByUpdate();
     };
     ItemUnit.prototype.getDispType = function(){
         let exists_edit_item = this.items.some(function(item){
@@ -104,7 +104,7 @@
         });
         return exists_edit_item ? 'edit' : 'view'
     };
-    ItemUnit.prototype.updateItemsByUpdateValue = function(){};
+    ItemUnit.prototype.updateItemsByUpdate = function(){};
     ItemUnit.prototype.isValid = function(){
         // チェック内容がなければ常にtrue
         return true;

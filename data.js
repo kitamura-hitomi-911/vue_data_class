@@ -85,7 +85,7 @@ let item_unit_list = [
                 placeholder:'チェックしたときだけ入力'
             }
         ],
-        updateItemsByUpdateValue:function(){
+        updateItemsByUpdate:function(){
             this.items_obj.unit4_text.updateProperty('disabled', !this.items_obj.unit4_check.value)
         }
     },
@@ -131,20 +131,37 @@ let item_unit_list = [
     },
     {
         id: 'unit6',
-        title: 'viewタイプテスト',
+        title: '大会形式',
         items:[
             {
-                id: 'unit6_text',
-                name: 'unit6_text',
-                title: 'viewタイプテスト',
-                form_type:'text',
-                disp_type:'view',
+                name: 'tour_type',
+                title: '形式',
+                form_type:'radio',
+                disp_type:'edit',
                 value: '',
-                placeholder:'個別のタイトルを入力',
-                setValueLabel:function(){
-                    this.value_label = this.value || '(未設定)';
-                }
-            }
-        ]
+                list:[
+                    {
+                        value:1,
+                        label:'個人'
+                    },
+                    {
+                        value:2,
+                        label:'団体'
+                    }
+                ]
+            },
+            {
+                name: 'tour_member',
+                title: '団体の場合は人数を入力',
+                form_type:'number',
+                disp_type:'edit',
+                value: '',
+                min:2,
+                max:5
+            },
+        ],
+        updateItemsByUpdate:function(){
+            this.items_obj.tour_member.updateProperty('disabled', !this.items_obj.tour_type.value || this.items_obj.tour_type.value === 1)
+        }
     },
 ];

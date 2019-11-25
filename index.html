@@ -97,7 +97,7 @@
     <dl>
         <dt>{{form_data.title}}</dt>
         <dd>
-            <input :type="form_data.form_type" v-model="form_data.value" :name="form_data.name" :placeholder="form_data.placeholder" :disabled="form_data.disabled" @input="onInput"/>
+            <input :type="form_data.form_type" v-model="form_data.value" :name="form_data.name" :placeholder="form_data.placeholder" :min="form_data.min" :max="form_data.max" :disabled="form_data.disabled" @input="onInput"/>
         </dd>
     </dl>
 </script>
@@ -177,7 +177,7 @@
         methods:{
             updateValues:function(){
                 console.log('unitに更新通知');
-                this.unit_data.updateItemsByUpdateValue();
+                this.unit_data.updateItemsByUpdate();
             }
         }
     });
