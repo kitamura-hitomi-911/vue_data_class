@@ -124,8 +124,8 @@ let item_unit_list = [
         ],
         isValid:function(){
             this.resetErrMsg();
-            this.hasEmptyError() && this.setErrMsg('〇〇は入力必須です');
-            !this.hasErrMsg() && !this.items_obj.unit5_start.value.match(/hoge/) && this.setErrMsg('開始のフォーマットが正しくありません');
+            // this.hasEmptyError() && this.setErrMsg('〇〇は入力必須です');
+            //!this.hasErrMsg() && !this.items_obj.entry_open_time.value.match(/^\d{2}:\d{2}$/) && this.setErrMsg('開始のフォーマットが正しくありません');
             return !this.hasErrMsg();
         }
     },
@@ -163,5 +163,23 @@ let item_unit_list = [
         updateItemsByUpdate:function(){
             this.items_obj.tour_member.updateProperty('disabled', !this.items_obj.tour_type.value || this.items_obj.tour_type.value === 1)
         }
+    },
+    {
+        id: 'unit7',
+        title: 'file',
+        items:[
+            {
+                name: 'mainimage',
+                form_type:'file',
+                disp_type:'edit',
+                value: ''
+            },
+            {
+                name: 'temporary_id',
+                form_type:'hidden',
+                disp_type:'edit',
+                value: ''
+            },
+        ]
     },
 ];

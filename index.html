@@ -13,7 +13,7 @@
 
 <script type="text/x-template" id="tmpl-form">
     <div class="form">
-        <form action="" name="frm">
+        <form name="frm" method="post" enctype="multipart/form-data">
             <ul>
                 <form-unit v-for="unit_data in unit_list" :unit_data="unit_data" :key="unit_data.id"></form-unit>
             </ul>
@@ -25,6 +25,58 @@
 </script>
 
 <!-- global compolents -->
+
+<!-- form-file -->
+<script type="text/x-template" id="tmpl-form-file">
+    <dl>
+        <dt>{{form_data.title}}</dt>
+        <dd>
+            <input :type="form_data.form_type" :name="form_data.name" :disabled="form_data.disabled" @change="onChange"/>
+            <div class="">
+                <img :src="file_data_src" alt="" v-if="file_data_src" style="width:200px;">
+                <p v-if="file_name">ファイル名:{{file_name}}</p>
+            </div>
+        </dd>
+    </dl>
+</script>
+<script>
+    Vue.component('form-file',{
+        props:{
+            form_data:{
+                type:Item,
+                requird:true
+            }
+        },
+        data:function(){
+            return {
+                file_data_src:'',
+                file_name:'',
+                reader:null
+            }
+        },
+        template:'#tmpl-form-file',
+        created:function(){
+            this.reader = new FileReader();
+            this.reader.addEventListener('load', this.onFileLoad, false);
+        },
+        methods:{
+            onChange:function(e){
+                let target = e.target;
+                let files = target.files;
+                if(files.length){
+                    this.reader.readAsDataURL(files[0]);
+                    this.file_name = files[0].name;
+                    //this.form_data.updateProperty('value', e.target.value);
+                }
+
+                this.$emit('updateValues');
+            },
+            onFileLoad:function(){
+                this.file_data_src = this.reader.result;
+            }
+        }
+    });
+</script>
 
 <!-- form-checkbox -->
 <script type="text/x-template" id="tmpl-form-checkbox">
@@ -217,7 +269,7 @@
                         console.log('err_flg:' + err_flg);
                     }
                     if(!err_flg){
-                        // document[btn.form_name].submit();
+                        document[btn.form_name].submit();
                     }
                 }
 

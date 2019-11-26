@@ -55,6 +55,7 @@
             radio:'form-radio',
             select:'form-select',
             textarea:'form-textarea',
+            file:'form-file',
             hidden: 'form-input'
         };
         this.component_name = this.disp_type === 'view' ? 'form-display_only' : component_name_map[this.form_type];
