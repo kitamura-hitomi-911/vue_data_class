@@ -83,8 +83,8 @@
         this.design_type = 'single';// single | multiple
         this.items = []; // 各フォームパーツがぶら下がる
         this.err_msgs = [];
-        this.observe_other_unit_ids = []; // 更新情報を受けとりたい他のUnitのidの配列
-        this.notify_update_other_units = [];// 更新情報を通知するほかのUnit(オブジェクト)の配列
+        this.observe_unit_ids = []; // 更新情報を受けとりたい他のUnitのidの配列
+        this.update_notice_to_other_units = [];// 更新情報を通知するほかのUnit(オブジェクト)の配列
 
         Object.keys(params).forEach(function(key) {
             if(this[key] !== void 0 || typeof params[key] == "function"){
@@ -110,17 +110,17 @@
     };
     ItemUnit.prototype.updateItemsByUpdate = function(){};
     // 更新情報を通知するほかのUnit(オブジェクト）を追加
-    ItemUnit.prototype.setNotifyUpdateToOtherUnit = function(unit){
-        this.notify_update_other_units.push(unit);
+    ItemUnit.prototype.setUpdateNoticeToOtherUnit = function(unit){
+        this.update_notice_to_other_units.push(unit);
     };
-    // notify_update_other_units にある unit（オブジェクト） の observerFromOtherUnit をたたく
+    // update_notice_to_other_units にある unit（オブジェクト） の onNotifiedUpdateFromObserveUnit をたたく
     ItemUnit.prototype.notifyUpdateToOtherUnits = function(){
-        this.notify_update_other_units.forEach(function(other_unit){
-            other_unit.observerFromOtherUnit(this);
+        this.update_notice_to_other_units.forEach(function(other_unit){
+            other_unit.onNotifiedUpdateFromObserveUnit(this);
         },this)
     };
-    // 他のUnitからの更新情報受け取り口
-    ItemUnit.prototype.observerFromOtherUnit = function(other_unit){
+    // 他のUnitからの更新情報受け取って処理
+    ItemUnit.prototype.onNotifiedUpdateFromObserveUnit = function(other_unit){
         console.log('this',this);
         console.log('other_unit', other_unit);
     };

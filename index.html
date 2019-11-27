@@ -256,6 +256,7 @@
                 ]
             },
             computed:{
+                /* id からunitを取得できるオブジェクト */
                 unit_obj : function(){
                     return this.unit_list.reduce(function(acc, unit){
                         acc[unit.id] = unit;
@@ -268,10 +269,10 @@
                     this.unit_list.push(new ItemUnit(item_unit));
                 },this);
 
-                // 他の Unit と連動して更新がある
+                // 他の Unit への更新通知をセット
                 this.unit_list.forEach(function(unit){
-                    unit.observe_other_unit_ids.forEach(function(observe_unit_id){
-                        this.unit_obj[observe_unit_id].setNotifyUpdateToOtherUnit(unit);
+                    unit.observe_unit_ids.forEach(function(observe_unit_id){
+                        this.unit_obj[observe_unit_id].setUpdateNoticeToOtherUnit(unit);
                     },this);
                 },this);
             },
