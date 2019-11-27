@@ -83,6 +83,9 @@
         this.design_type = 'single';// single | multiple
         this.items = []; // 各フォームパーツがぶら下がる
         this.err_msgs = [];
+        this.observe_other_unit_ids = []; // 更新情報を受けとりたい他のUnitのidの配列
+        this.notify_update_other_units = [];// 更新情報を通知するほかのUnit(オブジェクト)の配列
+
         Object.keys(params).forEach(function(key) {
             if(this[key] !== void 0 || typeof params[key] == "function"){
                 this[key] = key === 'items' ? params[key].map(function(item_params){
@@ -106,6 +109,21 @@
         return exists_edit_item ? 'edit' : 'view'
     };
     ItemUnit.prototype.updateItemsByUpdate = function(){};
+    // 更新情報を通知するほかのUnit(オブジェクト）を追加
+    ItemUnit.prototype.setNotifyUpdateToOtherUnit = function(unit){
+        this.notify_update_other_units.push(unit);
+    };
+    // notify_update_other_units にある unit（オブジェクト） の observerFromOtherUnit をたたく
+    ItemUnit.prototype.notifyUpdateToOtherUnits = function(){
+        this.notify_update_other_units.forEach(function(other_unit){
+            other_unit.observerFromOtherUnit(this);
+        },this)
+    };
+    // 他のUnitからの更新情報受け取り口
+    ItemUnit.prototype.observerFromOtherUnit = function(other_unit){
+        console.log('this',this);
+        console.log('other_unit', other_unit);
+    };
     ItemUnit.prototype.isValid = function(){
         // チェック内容がなければ常にtrue
         return true;

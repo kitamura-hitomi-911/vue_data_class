@@ -230,6 +230,8 @@
             updateValues:function(){
                 console.log('unitに更新通知');
                 this.unit_data.updateItemsByUpdate();
+                console.log('他のunitに更新情報を通知');
+                this.unit_data.notifyUpdateToOtherUnits();
             }
         }
     });
@@ -253,9 +255,24 @@
                     }
                 ]
             },
+            computed:{
+                unit_obj : function(){
+                    return this.unit_list.reduce(function(acc, unit){
+                        acc[unit.id] = unit;
+                        return acc
+                    },{});
+                }
+            },
             created:function(){
                 item_unit_list.forEach(function(item_unit){
                     this.unit_list.push(new ItemUnit(item_unit));
+                },this);
+
+                // 他の Unit と連動して更新がある
+                this.unit_list.forEach(function(unit){
+                    unit.observe_other_unit_ids.forEach(function(observe_unit_id){
+                        this.unit_obj[observe_unit_id].setNotifyUpdateToOtherUnit(unit);
+                    },this);
                 },this);
             },
             methods:{
