@@ -188,4 +188,47 @@ let item_unit_list = [
             },
         ]
     },
+    {
+        id: 'unit8',
+        title: 'input-type select',
+        items:[
+            {
+                name: 'selecttest',
+                title: 'プルダウン',
+                form_type:'select',
+                disp_type:'edit',
+                value: '',
+                list: [
+                    {
+                        value: '',
+                        label: '選択してください'
+                    },
+                    {
+                        value: 1,
+                        label: '表示用ラベル1',
+                        category: 1,
+                        category2: 1
+                    },
+                    {
+                        value: 2,
+                        label: '表示用ラベル2',
+                        category: 2,
+                        category2: 2
+                    },
+                    {
+                        value: 3,
+                        label: '表示用ラベル3',
+                        category: 3,
+                        category2: 1
+                    },
+                    {
+                        value: 4,
+                        label: '表示用ラベル4',
+                        category: 3,
+                        category2: 3
+                    }
+                ]
+            }
+        ]
+    },
 ];

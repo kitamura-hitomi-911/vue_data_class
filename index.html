@@ -78,6 +78,57 @@
     });
 </script>
 
+<!-- form-select -->
+<script type="text/x-template" id="tmpl-form-select">
+    <dl>
+        <dt>{{form_data.title}}</dt>
+        <dd>
+            <select v-model="form_data.value">
+                <option v-for="option in filter_list" :value="option.value">{{option.label}}</option>
+            </select>
+
+        </dd>
+        <dd class="err_msg" v-if="form_data.err_msg">{{form_data.err_msg}}</dd>
+    </dl>
+</script>
+<script>
+    Vue.component('form-select',{
+        props:{
+            form_data:{
+                type:Item,
+                requird:true
+            }
+        },
+        data:function(){
+            return {
+                // {key:'key名', value:'値'} のフォーマットで配列で持つ
+                filter_items: []
+            }
+        },
+        computed: {
+            filter_list: function () {
+                return this.filter_items.length ? this.filter_items.reduce(function(acc_list, filter_item){
+                    return acc_list.filter(function(option){
+                        return option.value === '' || option[filter_item.key] == filter_item.value;
+                    });
+                },this.form_data.list) : this.form_data.list;
+            }
+        },
+        template:'#tmpl-form-select',
+        methods:{
+            onChange:function(){
+                this.$emit('updateValues');
+            }
+        },
+        watch:{
+            filter_list:function(list){
+                console.log('filter_list',list);
+                // 現在の value が filter_list に含まれなければ "" に戻す
+            }
+        }
+    });
+</script>
+
 <!-- form-checkbox -->
 <script type="text/x-template" id="tmpl-form-checkbox">
     <dl>
