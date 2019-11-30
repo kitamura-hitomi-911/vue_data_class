@@ -80,7 +80,8 @@
         }
         this.id = '';
         this.title = ''; // 見出し文字列
-        this.design_type = 'single';// single | multiple
+        this.disp_type = '';
+        this.design_type = '';// single | multiple
         this.items = []; // 各フォームパーツがぶら下がる
         this.err_msgs = [];
         this.observe_unit_ids = []; // 更新情報を受けとりたい他のUnitのidの配列
@@ -101,12 +102,33 @@
             this.items_obj[item.name] = item;
         },this);
         this.updateItemsByUpdate();
+        this.setDispType();
+        this.setDesignType();
     };
-    ItemUnit.prototype.getDispType = function(){
+    ItemUnit.prototype.setDispType = function(){
         let exists_edit_item = this.items.some(function(item){
             return item.disp_type === 'edit';
         });
-        return exists_edit_item ? 'edit' : 'view'
+        this.disp_type = exists_edit_item ? 'edit' : 'view';
+    };
+    ItemUnit.prototype.setDesignType = function(){
+        let _design_type = '';
+
+        if(this.disp_type === 'view'){
+            _design_type = 'single';
+        }else if(this.design_type) {
+            _design_type = this.design_type;
+        }else{
+            // form_type が hidden 以外の item が2つ以上あれば multiple
+            // form_type が checkbox もしくは radio があれば multiple
+            // それ以外は single
+            _design_type = this.items.filter(function(item){
+                return item.form_type !== 'hidden';
+            }).length > 1 ? 'multiple' : this.items.some(function(item){
+                return item.form_type === 'checkbox' || item.form_type === 'radio';
+            }) ? 'multiple':'single';
+        }
+        this.design_type = _design_type;
     };
     ItemUnit.prototype.updateItemsByUpdate = function(){};
     // 更新情報を通知するほかのUnit(オブジェクト）を追加

@@ -199,7 +199,7 @@
     <li>
         <dl>
             <dt>{{unit_data.title}}</dt>
-            <dd v-if="disp_type === 'edit'" class="edit">
+            <dd v-if="unit_data.disp_type === 'edit'" class="edit">
                 <component v-for="form_data in unit_data.items" :key="form_data.name" :form_data="form_data" :is="form_data.component_name" @updateValues="updateValues"></component>
                 <div v-if="unit_data.err_msgs.length" class="err">
                     <p v-for="err_msg in unit_data.err_msgs">{{err_msg}}</p>
@@ -221,11 +221,6 @@
             }
         },
         template:'#tmpl-form-unit',
-        computed:{
-            disp_type:function(){
-                return this.unit_data.getDispType();
-            }
-        },
         methods:{
             updateValues:function(){
                 console.log('unitに更新通知');

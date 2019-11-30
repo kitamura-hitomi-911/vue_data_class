@@ -172,6 +172,7 @@ let item_unit_list = [
     {
         id: 'unit7',
         title: 'file',
+        design_type: 'filetype',
         items:[
             {
                 name: 'mainimage',
