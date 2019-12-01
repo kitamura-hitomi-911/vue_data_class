@@ -118,12 +118,18 @@
         methods:{
             onChange:function(){
                 this.$emit('updateValues');
+            },
+            resetValue:function(){
+                this.form_data.value  = '';
             }
         },
         watch:{
             filter_list:function(list){
                 console.log('filter_list',list);
                 // 現在の value が filter_list に含まれなければ "" に戻す
+                !this.filter_list.some(function(option){
+                    return option.value == this.form_data.value;
+                },this) && this.resetValue();
             }
         }
     });
